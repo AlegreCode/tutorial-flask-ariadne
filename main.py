@@ -3,6 +3,19 @@ from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
 
 type_defs = """
+    type Author {
+        id: ID
+        name: String
+        lastname: String
+        books: [Book]
+    }
+
+    type Book {
+        id: ID
+        title: String
+        author: Author
+    }
+
     type Query {
         hello: String!
     }

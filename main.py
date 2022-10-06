@@ -22,6 +22,11 @@ type_defs = """
         book(id: ID!): Book!
         books: [Book]
     }
+
+    type Mutation {
+        author(name: String!, lastname: String!): Author!
+        book(title: String!): Book!
+    }
 """
 
 query = QueryType()

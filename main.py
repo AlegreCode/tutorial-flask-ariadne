@@ -13,11 +13,14 @@ type_defs = """
     type Book {
         id: ID
         title: String
-        author: Author
+        author: Author!
     }
 
     type Query {
-        hello: String!
+        author(id: ID!): Author!
+        authors: [Author]
+        book(id: ID!): Book!
+        books: [Book]
     }
 """
 

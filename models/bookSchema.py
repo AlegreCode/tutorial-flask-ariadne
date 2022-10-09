@@ -1,4 +1,7 @@
-from flask_marshmallow import Marshmallow
+from models import ma, book
 
-ma = Marshmallow()
+class BookSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = book
+        include_fk = True
 

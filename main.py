@@ -2,9 +2,8 @@ import os
 from ariadne import QueryType, graphql_sync, make_executable_schema
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
 
-from models import db, book, author
+from models import db, ma, book, author, authorSchema
 
 type_defs = """
     type Author {
@@ -33,14 +32,15 @@ type_defs = """
     }
 """
 
+authors_schema = authorSchema.AuthorSchema(many=True)
+
 query = QueryType()
 
 
-@query.field("author")
-def resolve_hello(_, info):
-    request = info.context
-    user_agent = request.headers.get("User-Agent", "Guest")
-    return "Hello, %s!" % user_agent
+@query.field("authors")
+def resolve_authors(_, info):
+    data = author.Author.query.all()
+    return authors_schema.dump(data)
 
 
 schema = make_executable_schema(type_defs, query)
@@ -48,8 +48,10 @@ schema = make_executable_schema(type_defs, query)
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://{}@{}:{}/{}".format(os.environ.get("USER"), os.environ.get("HOST"), os.environ.get("PORT"), os.environ.get("DATABASE"))
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+ma.init_app(app)
 
 with app.app_context():
     db.create_all()

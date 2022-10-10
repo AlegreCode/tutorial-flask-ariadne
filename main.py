@@ -7,7 +7,7 @@ from models import db, ma, book, author, authorSchema
 from schemas.type_defs import type_defs, datetime_scalar
 
 
-
+author_schema = authorSchema.AuthorSchema()
 authors_schema = authorSchema.AuthorSchema(many=True)
 
 query = QueryType()
@@ -17,6 +17,11 @@ query = QueryType()
 def resolve_authors(_, info):
     data = author.Author.query.all()
     return authors_schema.dump(data)
+
+@query.field("author")
+def resolve_author(_, info, id):
+    data = author.Author.query.get(id)
+    return author_schema.dump(data)
 
 schema = make_executable_schema(type_defs, query, datetime_scalar)
 

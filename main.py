@@ -1,22 +1,30 @@
 import os
-from ariadne import QueryType, graphql_sync, make_executable_schema
+from ariadne import QueryType, gql, graphql_sync, make_executable_schema
 from ariadne.constants import PLAYGROUND_HTML
+from ariadne import ScalarType
 from flask import Flask, request, jsonify
+from datetime import datetime
 
 from models import db, ma, book, author, authorSchema
 
-type_defs = """
+type_defs = gql("""
+    scalar Datetime
+
     type Author {
         id: ID
         name: String
         lastname: String
         books: [Book]
+        created_at: Datetime
+        updated_at: Datetime
     }
 
     type Book {
         id: ID
         title: String
         author: Author!
+        created_at: Datetime
+        updated_at: Datetime
     }
 
     type Query {
@@ -30,7 +38,7 @@ type_defs = """
         author(name: String!, lastname: String!): Author!
         book(title: String!): Book!
     }
-"""
+""")
 
 authors_schema = authorSchema.AuthorSchema(many=True)
 
@@ -42,8 +50,12 @@ def resolve_authors(_, info):
     data = author.Author.query.all()
     return authors_schema.dump(data)
 
+datetime_scalar = ScalarType("Datetime")
+@datetime_scalar.serializer
+def datetime_serializer(value):
+    return datetime.strptime(value,"%Y-%m-%dT%H:%M:%S")
 
-schema = make_executable_schema(type_defs, query)
+schema = make_executable_schema(type_defs, query, datetime_scalar)
 
 app = Flask(__name__)
 

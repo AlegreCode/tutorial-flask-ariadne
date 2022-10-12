@@ -3,12 +3,15 @@ from ariadne import QueryType, graphql_sync, make_executable_schema
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
 
-from models import db, ma, book, author, authorSchema
+from models import db, ma, book, author, authorSchema, bookSchema
 from schemas.type_defs import type_defs, datetime_scalar
 
 
 author_schema = authorSchema.AuthorSchema()
 authors_schema = authorSchema.AuthorSchema(many=True)
+
+book_schema = bookSchema.BookSchema()
+books_schema = bookSchema.BookSchema(many=True)
 
 query = QueryType()
 
@@ -22,6 +25,17 @@ def resolve_authors(_, info):
 def resolve_author(_, info, id):
     data = author.Author.query.get(id)
     return author_schema.dump(data)
+
+@query.field("books")
+def resolve_books(_, info):
+    data = book.Book.query.all()
+    return books_schema.dump(data)
+
+@query.field("book")
+def resolve_book(_, info, id):
+    data = book.Book.query.get(id)
+    return book_schema.dump(data)
+
 
 schema = make_executable_schema(type_defs, query, datetime_scalar)
 

@@ -6,7 +6,7 @@ class Book (db.Model):
     title= db.Column(db.String(255))
 
     created_at= db.Column(db.DateTime, server_default=db.func.now())
-    updated_at= db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+    updated_at= db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
     author_id = db.Column(db.Integer, db.ForeignKey("authors.id"))
-    author = db.relationship("Author", backref="books")
+    author = db.relationship("Author", backref="books", cascade="all, delete")

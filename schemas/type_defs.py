@@ -39,5 +39,8 @@ type_defs = gql("""
 
         updateAuthor(id: ID!, name: String!, lastname: String!): Author!
         updateBook(id: ID!, title: String!): Book!
+
+        deleteAuthor(id: ID!): Author!
+        deleteBook(id: ID!): Book!
     }
 """)

@@ -56,6 +56,21 @@ def resolve_add_book(_, info, title, author_id):
     db.session.commit()
     return book_schema.dump(book)
 
+@mutation.field("updateAuthor")
+def resolve_update_author(_, info, id, name, lastname):
+    author = Author.query.get(id)
+    author.name = name
+    author.lastname = lastname
+    db.session.commit()
+    return author_schema.dump(author)
+
+@mutation.field("updateBook")
+def resolve_update_book(_, info, id, title):
+    book = Book.query.get(id)
+    book.title = title
+    db.session.commit()
+    return book_schema.dump(book)
+
 schema = make_executable_schema(type_defs, [query, mutation, datetime_scalar])
 
 app = Flask(__name__)

@@ -34,7 +34,7 @@ type_defs = gql("""
     }
 
     type Mutation {
-        author(name: String!, lastname: String!): Author!
-        book(title: String!): Book!
+        addAuthor(name: String!, lastname: String!): Author!
+        addBook(title: String!, author_id: ID): Book!
     }
 """)

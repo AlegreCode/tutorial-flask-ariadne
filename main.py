@@ -1,43 +1,62 @@
+import imp
 import os
-from ariadne import QueryType, graphql_sync, make_executable_schema
+from ariadne import QueryType, MutationType,graphql_sync, make_executable_schema
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
 
-from models import db, ma, book, author, authorSchema, bookSchema
+from models import db, ma
+from models.author import Author
+from models.book import Book
+from models.authorSchema import AuthorSchema
+from models.bookSchema import BookSchema
 from schemas.type_defs import type_defs, datetime_scalar
 
 
-author_schema = authorSchema.AuthorSchema()
-authors_schema = authorSchema.AuthorSchema(many=True)
+author_schema = AuthorSchema()
+authors_schema = AuthorSchema(many=True)
 
-book_schema = bookSchema.BookSchema()
-books_schema = bookSchema.BookSchema(many=True)
+book_schema = BookSchema()
+books_schema = BookSchema(many=True)
 
 query = QueryType()
+mutation = MutationType()
 
 
 @query.field("authors")
 def resolve_authors(_, info):
-    data = author.Author.query.all()
+    data = Author.query.all()
     return authors_schema.dump(data)
 
 @query.field("author")
 def resolve_author(_, info, id):
-    data = author.Author.query.get(id)
+    data = Author.query.get(id)
     return author_schema.dump(data)
 
 @query.field("books")
 def resolve_books(_, info):
-    data = book.Book.query.all()
+    data = Book.query.all()
     return books_schema.dump(data)
 
 @query.field("book")
 def resolve_book(_, info, id):
-    data = book.Book.query.get(id)
+    data = Book.query.get(id)
     return book_schema.dump(data)
 
+@mutation.field("addAuthor")
+def resolve_add_author(_, info, name, lastname):
+    author = Author(name=name, lastname=lastname)
+    db.session.add(author)
+    db.session.commit()
+    return author_schema.dump(author)
 
-schema = make_executable_schema(type_defs, query, datetime_scalar)
+@mutation.field("addBook")
+def resolve_add_book(_, info, title, author_id):
+    book = Book(title=title, author_id=author_id)
+    db.session.add(book)
+    db.session.commit()
+    return book_schema.dump(book)
+
+schema = make_executable_schema(type_defs, [query, mutation, datetime_scalar])
 
 app = Flask(__name__)
 

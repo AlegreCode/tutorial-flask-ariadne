@@ -51,7 +51,8 @@ def resolve_add_author(_, info, name, lastname):
 
 @mutation.field("addBook")
 def resolve_add_book(_, info, title, author_id):
-    book = Book(title=title, author_id=author_id)
+    author = Author.query.get(author_id)
+    book = Book(title=title, author=author)
     db.session.add(book)
     db.session.commit()
     return book_schema.dump(book)

@@ -81,6 +81,7 @@ def resolve_delete_author(_, info,  id):
 @mutation.field("deleteBook")
 def resolve_delete_book(_, info, id):
     book = Book.query.get(id)
+    book.author = None
     db.session.delete(book)
     db.session.commit()
     return book_schema.dump(book)

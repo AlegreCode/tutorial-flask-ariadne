@@ -71,6 +71,20 @@ def resolve_update_book(_, info, id, title):
     db.session.commit()
     return book_schema.dump(book)
 
+@mutation.field("deleteAuthor")
+def resolve_delete_author(_, info,  id):
+    author = Author.query.get(id)
+    db.session.delete(author)
+    db.session.commit()
+    return author_schema.dump(author)
+
+@mutation.field("deleteBook")
+def resolve_delete_book(_, info, id):
+    book = Book.query.get(id)
+    db.session.delete(book)
+    db.session.commit()
+    return book_schema.dump(book)
+
 schema = make_executable_schema(type_defs, [query, mutation, datetime_scalar])
 
 app = Flask(__name__)

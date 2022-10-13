@@ -9,4 +9,3 @@ class Book (db.Model):
     updated_at= db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
     author_id = db.Column(db.Integer, db.ForeignKey("authors.id"))
-    author = db.relationship("Author", backref="books", cascade="all, delete")

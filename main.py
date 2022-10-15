@@ -1,4 +1,3 @@
-import imp
 import os
 from ariadne import QueryType, MutationType,graphql_sync, make_executable_schema
 from ariadne.constants import PLAYGROUND_HTML

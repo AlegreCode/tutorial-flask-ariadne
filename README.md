@@ -18,6 +18,7 @@ los modelos y flask-marshmallow para los esquemas. Los datos de guardan en MySQL
 # Instalación
 
 - Renombra el fichero `.env.example` a `.env`, inserta los valores correspondientes a tu conexión de base de datos.
+- Crea el entorno virtual de desarrollo con `python -m venv venv`.
 - Instala las dependencia con `pip install -r requirements.txt`.
 - Inicializa el servidor de desarrollo con `flask --app main run`.
 

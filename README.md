@@ -7,6 +7,7 @@ Creación de API Graphql con Flask, Ariadne y MySQL.
 ## Tabla de contenidos
 
 * [Información general](#información-general)
+* [Instalación](#instalación)
 * [Tecnologías](#tecnologías)
 
 

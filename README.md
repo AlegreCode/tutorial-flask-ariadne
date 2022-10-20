@@ -12,8 +12,9 @@ Creación de API Graphql con Flask, Ariadne y MySQL.
 
 ## Información general
 
-El proyecto consiste en un API Graphql de consulta de autores y libros. Creamos un servidor con Flask y Ariadne. Usamos flask-sqlalchemy para
-los modelos y flask-marshmallow para los esquemas. Los datos de guardan en MySQL.
+El proyecto consiste en un API Graphql de consulta de autores y libros. Se establece una relación "one to many" entre las tablas `authors` y `books`, de forma
+que, al consultar los autores, poder acceder a los libros que tiene y, al consultar el libro, poder acceder a los datos del autor.
+Creamos un servidor graphql con Flask y Ariadne. Usamos flask-sqlalchemy para los modelos y flask-marshmallow para los esquemas. Los datos de guardan en MySQL.
 
 # Instalación
 
